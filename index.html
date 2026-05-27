@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>📜 Patent or Not? – IP Knowledge Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #003366;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        .score-display {
+            text-align: right;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4A90E2, #2ECC71);
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .innovation-text {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #1a1a2e;
+            text-align: center;
+            margin: 30px 0;
+            line-height: 1.4;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .patent-btn {
+            background: #2ECC71;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .not-patent-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .patent-btn:hover, .not-patent-btn:hover {
+            transform: scale(1.02);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 5px solid;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .feedback.correct {
+            background: #e8f8f0;
+            border-left-color: #2ECC71;
+            color: #1e7e34;
+        }
+
+        .feedback.wrong {
+            background: #fee;
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #4A90E2, #2ECC71);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .completion-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .completion-card h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .celebration {
+            font-size: 3.5em;
+            margin: 20px 0;
+        }
+
+        .score-circle {
+            background: linear-gradient(135deg, #4A90E2, #2ECC71);
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .badge {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 50px;
+        }
+
+        .badge-learner { background: #F39C12; color: white; }
+        .badge-apprentice { background: #3498DB; color: white; }
+        .badge-master { background: #2ECC71; color: white; }
+
+        .encouragement {
+            font-size: 1.1em;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 15px;
+        }
+
+        .restart-btn {
+            background: #003366;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .innovation-text {
+                font-size: 1.2em;
+            }
+            .patent-btn, .not-patent-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            .score-circle {
+                width: 120px;
+                height: 120px;
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+
+    <script>
+        // Master question bank
+        const masterQuestions = [
+            {
+                text: "A new type of electric motor that is 50% more efficient than anything currently on the market.",
+                isPatentable: true,
+                explanation: "✅ Yes, patentable! It is novel (new), useful, and non-obvious to someone skilled in electrical engineering. This is a classic utility patent."
+            },
+            {
+                text: "A recipe for chocolate chip cookies (a list of ingredients and baking instructions).",
+                isPatentable: false,
+                explanation: "❌ Not patentable. Recipes can be protected as trade secrets (like KFC's recipe) or copyrighted as literary works, but they are generally not considered novel or non-obvious enough for a patent."
+            },
+            {
+                text: "A new medical device that detects heart problems early using a smartphone attachment.",
+                isPatentable: true,
+                explanation: "✅ Yes, patentable! It is a new, useful, and non-obvious invention. Medical devices are commonly patented."
+            },
+            {
+                text: "The theory of gravity (Newton's discovery of why objects fall to the ground).",
+                isPatentable: false,
+                explanation: "❌ Not patentable. Scientific theories and natural laws are explicitly excluded from patent law. You cannot own gravity."
+            },
+            {
+                text: "A new type of smartphone screen that never cracks, no matter how many times you drop it.",
+                isPatentable: true,
+                explanation: "✅ Yes, patentable! A new, useful, and non-obvious material or design. This would be highly valuable and definitely patentable."
+            },
+            {
+                text: "A logo for a new clothing brand – a green tree inside a circle with the brand name underneath.",
+                isPatentable: false,
+                explanation: "❌ Not patentable. Logos are protected by trademark law, not patents. A trademark protects your brand identity."
+            },
+            {
+                text: "A genetically modified tomato that grows twice as fast as normal tomatoes.",
+                isPatentable: true,
+                explanation: "✅ Yes, patentable (in most jurisdictions)! Genetically modified organisms can be patented in countries like the US and Europe (with some ethical limits). This is a challenging one – good discussion point!"
+            },
+            {
+                text: "A mathematical formula for calculating prime numbers faster than ever before.",
+                isPatentable: false,
+                explanation: "❌ Not patentable. Mathematical methods and formulas are explicitly excluded from patent law. You cannot own a mathematical equation."
+            },
+            {
+                text: "A new process for recycling plastic bottles using bacteria that eat plastic.",
+                isPatentable: true,
+                explanation: "✅ Yes, patentable! A new process or method is patentable. This is a novel, useful, non-obvious process that solves a real environmental problem."
+            },
+            {
+                text: "A new rule for playing chess – pawns can now move two squares forward at any time, not just on their first move.",
+                isPatentable: false,
+                explanation: "❌ Not patentable. Rules of games are generally not patentable (they are like laws or methods of organising human activity). You could copyright the rulebook, but not the rule itself."
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+        let userChoice = null;
+        let isCorrect = false;
+        let completed = false;
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            currentQuestions = shuffleArray([...masterQuestions]);
+            currentIndex = 0;
+            score = 0;
+            isAnswered = false;
+            userChoice = null;
+            isCorrect = false;
+            completed = false;
+        }
+
+        function getBadgeAndMessage(scorePercentage) {
+            if (scorePercentage < 40) {
+                return {
+                    badge: "🌱 IP Learner",
+                    badgeClass: "badge-learner",
+                    message: "Good start! Review the feedback and try again to level up. Every master was once a beginner."
+                };
+            } else if (scorePercentage < 80) {
+                return {
+                    badge: "📜 IP Apprentice",
+                    badgeClass: "badge-apprentice",
+                    message: "Nice work! You have a solid foundation. One more try and you could be an IP Master!"
+                };
+            } else {
+                return {
+                    badge: "🏆 IP Master",
+                    badgeClass: "badge-master",
+                    message: "Excellent! You really understand what can and cannot be patented. Keep up the great work!"
+                };
+            }
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (completed) {
+                renderCompletion(app);
+            } else if (currentIndex < currentQuestions.length) {
+                renderQuestion(app);
+            } else {
+                completed = true;
+                renderCompletion(app);
+            }
+        }
+
+        function renderQuestion(container) {
+            const q = currentQuestions[currentIndex];
+            const progressPercent = (currentIndex / currentQuestions.length) * 100;
+
+            let feedbackHtml = '';
+            if (isAnswered) {
+                const feedbackClass = isCorrect ? 'correct' : 'wrong';
+                feedbackHtml = `<div class="feedback ${feedbackClass}">${isCorrect ? q.explanation : `❌ Not quite. ${q.hint || 'Review the criteria for patentability and try again.'}`}</div>`;
+            }
+
+            const html = `
+                <div class="game-card">
+                    <div class="header">
+                        <h1>📜 Patent or Not?</h1>
+                        <div class="subtitle">Test your IP knowledge – click your answer, then learn why</div>
+                    </div>
+                    <div class="score-display">🏆 Score: ${score}</div>
+                    <div class="progress">
+                        <div class="progress-fill" style="width: ${progressPercent}%;"></div>
+                    </div>
+                    <div class="question-counter">Innovation ${currentIndex + 1} of ${currentQuestions.length}</div>
+                    <div class="innovation-text">🔬 ${q.text}</div>
+                    <div class="buttons">
+                        <button class="patent-btn" onclick="checkAnswer(true)" ${isAnswered ? 'disabled' : ''}>✅ Patentable</button>
+                        <button class="not-patent-btn" onclick="checkAnswer(false)" ${isAnswered ? 'disabled' : ''}>❌ Not Patentable</button>
+                    </div>
+                    ${feedbackHtml}
+                    ${isAnswered ? `<button class="next-btn" onclick="nextQuestion()">➡️ Next Innovation</button>` : ''}
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function renderCompletion(container) {
+            const scorePercentage = (score / currentQuestions.length) * 100;
+            const { badge, badgeClass, message } = getBadgeAndMessage(scorePercentage);
+
+            const html = `
+                <div class="completion-card">
+                    <div class="celebration">🎉🏆🎉</div>
+                    <h2>Game Complete!</h2>
+                    <div class="score-circle">${score}/${currentQuestions.length}</div>
+                    <div class="badge ${badgeClass}">${badge}</div>
+                    <div class="encouragement">💡 ${message}</div>
+                    <button class="restart-btn" onclick="restartGame()">🔄 Play Again (New Random Order)</button>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        window.checkAnswer = (choice) => {
+            if (isAnswered) return;
+            const q = currentQuestions[currentIndex];
+            userChoice = choice;
+            isCorrect = (choice === q.isPatentable);
+            if (isCorrect) {
+                score++;
+            }
+            isAnswered = true;
+            render();
+        };
+
+        window.nextQuestion = () => {
+            if (!isAnswered) return;
+            currentIndex++;
+            isAnswered = false;
+            userChoice = null;
+            isCorrect = false;
+            render();
+        };
+
+        window.restartGame = () => {
+            initGame();
+            render();
+        };
+
+        // Initialise and start
+        initGame();
+        render();
+    </script>
+</body>
+</html>
