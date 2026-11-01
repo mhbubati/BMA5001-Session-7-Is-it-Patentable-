@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>📜 Patent or Not? – IP Knowledge Game</title>
+    <title>BMA5001 - Activity One: Patent or Not?</title>
     <style>
+        /* ===== BSU SIGNATURE COLOURS ===== */
+        :root {
+            --bsu-navy: #003366;
+            --bsu-purple: #9F166F;
+            --bsu-white: #FFFFFF;
+            --academic-blue: #3F88C5;
+            --success-green: #2E7D32;
+            --warning-orange: #F57C00;
+            --risk-red: #C62828;
+            --bg-light: #F4F6F9;
+            --text-dark: #1A2A3A;
+            --text-muted: #5A7090;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,240 +27,356 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, var(--bg-light) 0%, #E8EEF4 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: var(--text-dark);
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(63, 136, 197, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(159, 22, 111, 0.06) 0%, transparent 50%);
+            animation: bgShift 25s ease-in-out infinite alternate;
+            z-index: -1;
+            pointer-events: none;
+        }
+        @keyframes bgShift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(3%, 3%) rotate(2deg); }
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .game-card {
-            background: white;
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .header {
+        /* ===== HEADER ===== */
+        .game-header {
             text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--bsu-white);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 51, 102, 0.08);
+            border-top: 5px solid var(--bsu-purple);
+        }
+
+        .game-header h1 {
+            color: var(--bsu-navy);
+            font-size: 1.4em;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .game-header h2 {
+            color: var(--bsu-purple);
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        /* ===== GAME CARD ===== */
+        .game-card {
+            background: var(--bsu-white);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 51, 102, 0.1);
             margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #003366;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #2c3e50;
-            font-size: 0.95em;
+            border: 1px solid rgba(0, 51, 102, 0.05);
         }
 
         .score-display {
             text-align: right;
-            font-weight: bold;
-            color: #003366;
-            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--bsu-navy);
+            font-size: 1.1em;
+            margin-bottom: 15px;
         }
 
         .progress {
-            background: #e0e0e0;
+            background: #E2E8F0;
             border-radius: 20px;
-            height: 8px;
+            height: 10px;
             margin: 20px 0;
             overflow: hidden;
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #4A90E2, #2ECC71);
+            background: linear-gradient(90deg, var(--bsu-navy), var(--bsu-purple));
             width: 0%;
             height: 100%;
-            transition: width 0.3s ease;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .question-counter {
             text-align: center;
-            color: #666;
-            margin-bottom: 15px;
-            font-size: 0.9em;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            font-weight: 600;
         }
 
         .innovation-text {
-            font-size: 1.5em;
+            font-size: 1.35em;
             font-weight: 600;
-            color: #1a1a2e;
+            color: var(--bsu-navy);
             text-align: center;
             margin: 30px 0;
-            line-height: 1.4;
+            line-height: 1.5;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            border-left: 5px solid var(--academic-blue);
         }
 
+        /* ===== BUTTONS ===== */
         .buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
-        .patent-btn {
-            background: #2ECC71;
-            color: white;
+        .action-btn {
             border: none;
             border-radius: 50px;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            font-weight: bold;
+            padding: 16px 32px;
+            font-size: 1.15em;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.25s ease;
             flex: 1;
-            max-width: 200px;
-        }
-
-        .not-patent-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .patent-btn:hover, .not-patent-btn:hover {
-            transform: scale(1.02);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            transform: none;
-            cursor: not-allowed;
-        }
-
-        .feedback {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 10px;
-            border-left: 5px solid;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-
-        .feedback.correct {
-            background: #e8f8f0;
-            border-left-color: #2ECC71;
-            color: #1e7e34;
-        }
-
-        .feedback.wrong {
-            background: #fee;
-            border-left-color: #e74c3c;
-            color: #c0392b;
-        }
-
-        .next-btn {
-            background: linear-gradient(135deg, #4A90E2, #2ECC71);
-            color: white;
-            border: none;
-            border-radius: 40px;
-            padding: 12px 25px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .completion-card {
-            background: white;
-            border-radius: 30px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .completion-card h2 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .celebration {
-            font-size: 3.5em;
-            margin: 20px 0;
-        }
-
-        .score-circle {
-            background: linear-gradient(135deg, #4A90E2, #2ECC71);
-            color: white;
-            font-size: 2.5em;
-            font-weight: bold;
-            padding: 20px;
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
+            max-width: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px auto;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Neutral State (Before answering) */
+        .btn-neutral {
+            background: var(--bsu-navy);
+            color: var(--bsu-white);
+        }
+        .btn-neutral:hover {
+            background: var(--academic-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(63, 136, 197, 0.3);
+        }
+
+        /* Correct State */
+        .btn-success {
+            background: var(--success-green) !important;
+            color: var(--bsu-white) !important;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+        }
+
+        /* Wrong State (Only appears if user clicks the wrong one) */
+        .btn-danger {
+            background: var(--risk-red) !important;
+            color: var(--bsu-white) !important;
+            box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+        }
+
+        /* Disabled State */
+        .btn-disabled {
+            background: #E2E8F0 !important;
+            color: #94A3B8 !important;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ===== FEEDBACK ===== */
+        .feedback {
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 1.05em;
+            line-height: 1.6;
+            animation: fadeIn 0.4s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feedback.correct {
+            background: rgba(46, 125, 50, 0.08);
+            border: 2px solid var(--success-green);
+            color: #14532D;
+        }
+
+        .feedback.wrong {
+            background: rgba(198, 40, 40, 0.08);
+            border: 2px solid var(--risk-red);
+            color: #7F1D1D;
+        }
+
+        .feedback-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, var(--bsu-purple), var(--bsu-navy));
+            color: var(--bsu-white);
+            border: none;
+            border-radius: 40px;
+            padding: 14px 28px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(159, 22, 111, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(159, 22, 111, 0.4);
+        }
+
+        /* ===== COMPLETION CARD ===== */
+        .completion-card {
+            background: var(--bsu-white);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 51, 102, 0.15);
+            border-top: 5px solid var(--success-green);
+        }
+
+        .completion-card h2 {
+            color: var(--bsu-navy);
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+
+        .celebration {
+            font-size: 4em;
+            margin: 10px 0;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+
+        .score-circle {
+            background: linear-gradient(135deg, var(--bsu-navy), var(--academic-blue));
+            color: var(--bsu-white);
+            font-size: 2.5em;
+            font-weight: 800;
+            padding: 25px;
+            border-radius: 50%;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto;
+            box-shadow: 0 10px 25px rgba(0, 51, 102, 0.2);
         }
 
         .badge {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin: 15px 0;
-            padding: 10px;
+            font-size: 1.3em;
+            font-weight: 800;
+            margin: 20px 0;
+            padding: 12px 24px;
             border-radius: 50px;
+            display: inline-block;
         }
 
-        .badge-learner { background: #F39C12; color: white; }
-        .badge-apprentice { background: #3498DB; color: white; }
-        .badge-master { background: #2ECC71; color: white; }
+        .badge-learner { background: var(--warning-orange); color: var(--bsu-white); }
+        .badge-apprentice { background: var(--academic-blue); color: var(--bsu-white); }
+        .badge-master { background: var(--success-green); color: var(--bsu-white); }
 
         .encouragement {
-            font-size: 1.1em;
-            margin: 15px 0;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 15px;
+            font-size: 1.15em;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            border-left: 5px solid var(--bsu-purple);
         }
 
         .restart-btn {
-            background: #003366;
-            color: white;
+            background: var(--bsu-navy);
+            color: var(--bsu-white);
             border: none;
             border-radius: 40px;
-            padding: 12px 25px;
-            font-size: 1em;
-            font-weight: bold;
+            padding: 14px 32px;
+            font-size: 1.1em;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .restart-btn:hover {
+            background: var(--bsu-purple);
+            transform: translateY(-2px);
+        }
+
+        /* ===== STANDARD FOOTER ===== */
+        .bsu-footer {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 30px;
+            padding: 24px 20px;
+            background: linear-gradient(135deg, #001A33 0%, var(--bsu-navy) 100%);
+            border-top: 4px solid var(--bsu-purple);
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+            color: var(--bsu-white);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .bsu-footer p { margin: 4px 0; }
+        .bsu-footer strong { color: var(--bsu-gold, #FFD700); font-size: 1.05em; }
+        .bsu-footer a {
+            color: var(--bsu-gold, #FFD700);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .bsu-footer a:hover { color: var(--bsu-white); text-decoration: underline; }
+        .footer-tagline {
+            margin-top: 12px !important;
+            padding-top: 12px !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: var(--bsu-gold, #FFD700) !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.5px;
         }
 
         @media (max-width: 600px) {
-            .innovation-text {
-                font-size: 1.2em;
-            }
-            .patent-btn, .not-patent-btn {
-                padding: 12px 20px;
-                font-size: 1em;
-            }
-            .score-circle {
-                width: 120px;
-                height: 120px;
-                font-size: 2em;
-            }
+            .game-header h1 { font-size: 1.1em; }
+            .game-header h2 { font-size: 1.3em; }
+            .innovation-text { font-size: 1.15em; padding: 15px; }
+            .action-btn { padding: 14px 20px; font-size: 1em; max-width: 100%; }
+            .score-circle { width: 130px; height: 130px; font-size: 2em; }
+            .buttons { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -254,57 +384,57 @@
     <div class="container" id="app"></div>
 
     <script>
-        // Master question bank
+        // Master question bank with detailed pedagogical explanations
         const masterQuestions = [
             {
                 text: "A new type of electric motor that is 50% more efficient than anything currently on the market.",
                 isPatentable: true,
-                explanation: "✅ Yes, patentable! It is novel (new), useful, and non-obvious to someone skilled in electrical engineering. This is a classic utility patent."
+                explanation: "This is a classic utility patent. It is novel (new), has industrial application (useful), and involves an inventive step (non-obvious to someone skilled in electrical engineering)."
             },
             {
                 text: "A recipe for chocolate chip cookies (a list of ingredients and baking instructions).",
                 isPatentable: false,
-                explanation: "❌ Not patentable. Recipes can be protected as trade secrets (like KFC's recipe) or copyrighted as literary works, but they are generally not considered novel or non-obvious enough for a patent."
+                explanation: "Recipes are generally not considered novel or non-obvious enough for a patent. They are better protected as trade secrets (like KFC's recipe) or copyrighted as literary works."
             },
             {
                 text: "A new medical device that detects heart problems early using a smartphone attachment.",
                 isPatentable: true,
-                explanation: "✅ Yes, patentable! It is a new, useful, and non-obvious invention. Medical devices are commonly patented."
+                explanation: "Medical devices that provide a new, useful, and non-obvious technical solution to a problem are highly patentable, provided they meet the criteria of novelty and inventive step."
             },
             {
                 text: "The theory of gravity (Newton's discovery of why objects fall to the ground).",
                 isPatentable: false,
-                explanation: "❌ Not patentable. Scientific theories and natural laws are explicitly excluded from patent law. You cannot own gravity."
+                explanation: "Scientific theories, discoveries, and natural laws are explicitly excluded from patent law. You can patent an application of a discovery, but not the discovery itself."
             },
             {
                 text: "A new type of smartphone screen that never cracks, no matter how many times you drop it.",
                 isPatentable: true,
-                explanation: "✅ Yes, patentable! A new, useful, and non-obvious material or design. This would be highly valuable and definitely patentable."
+                explanation: "A new, useful, and non-obvious material or technical design is highly patentable. This represents a significant technical advancement with clear industrial application."
             },
             {
                 text: "A logo for a new clothing brand – a green tree inside a circle with the brand name underneath.",
                 isPatentable: false,
-                explanation: "❌ Not patentable. Logos are protected by trademark law, not patents. A trademark protects your brand identity."
+                explanation: "Logos, brand names, and slogans are protected by Trademark law, not patents. Trademarks protect brand identity and prevent consumer confusion."
             },
             {
                 text: "A genetically modified tomato that grows twice as fast as normal tomatoes.",
                 isPatentable: true,
-                explanation: "✅ Yes, patentable (in most jurisdictions)! Genetically modified organisms can be patented in countries like the US and Europe (with some ethical limits). This is a challenging one – good discussion point!"
+                explanation: "In many jurisdictions (like the US and parts of Europe), genetically modified organisms (GMOs) and the processes to create them can be patented, provided they are not mere discoveries of nature."
             },
             {
                 text: "A mathematical formula for calculating prime numbers faster than ever before.",
                 isPatentable: false,
-                explanation: "❌ Not patentable. Mathematical methods and formulas are explicitly excluded from patent law. You cannot own a mathematical equation."
+                explanation: "Mathematical methods, algorithms, and formulas 'as such' are explicitly excluded from patent law. You cannot own a mathematical equation, though a specific technical application of it might be."
             },
             {
                 text: "A new process for recycling plastic bottles using bacteria that eat plastic.",
                 isPatentable: true,
-                explanation: "✅ Yes, patentable! A new process or method is patentable. This is a novel, useful, non-obvious process that solves a real environmental problem."
+                explanation: "A new process or method is patentable. This is a novel, useful, non-obvious technical process that solves a real-world environmental problem."
             },
             {
                 text: "A new rule for playing chess – pawns can now move two squares forward at any time, not just on their first move.",
                 isPatentable: false,
-                explanation: "❌ Not patentable. Rules of games are generally not patentable (they are like laws or methods of organising human activity). You could copyright the rulebook, but not the rule itself."
+                explanation: "Rules of games, schemes, and methods of organising human activity are not patentable. You could copyright the rulebook's text, but not the abstract rule itself."
             }
         ];
 
@@ -339,21 +469,28 @@
                 return {
                     badge: "🌱 IP Learner",
                     badgeClass: "badge-learner",
-                    message: "Good start! Review the feedback and try again to level up. Every master was once a beginner."
+                    message: "Good start! Review the feedback carefully. Intellectual Property law has specific rules, and every expert was once a beginner. Try again to level up!"
                 };
             } else if (scorePercentage < 80) {
                 return {
                     badge: "📜 IP Apprentice",
                     badgeClass: "badge-apprentice",
-                    message: "Nice work! You have a solid foundation. One more try and you could be an IP Master!"
+                    message: "Nice work! You have a solid foundation in IP principles. Review the ones you missed, and you will be an IP Master in no time!"
                 };
             } else {
                 return {
                     badge: "🏆 IP Master",
                     badgeClass: "badge-master",
-                    message: "Excellent! You really understand what can and cannot be patented. Keep up the great work!"
+                    message: "Excellent! You really understand what can and cannot be patented. You are ready to protect innovation effectively. Keep up the great work!"
                 };
             }
+        }
+
+        function getButtonClass(btnIsPatentable, isCorrectAnswer, userChoseThis) {
+            if (!isAnswered) return 'btn-neutral';
+            if (isCorrectAnswer) return 'btn-success'; // Always highlight the correct answer in green
+            if (userChoseThis && !isCorrectAnswer) return 'btn-danger'; // Highlight wrong choice in red
+            return 'btn-disabled'; // Grey out the unchosen, incorrect option
         }
 
         function render() {
@@ -370,32 +507,49 @@
 
         function renderQuestion(container) {
             const q = currentQuestions[currentIndex];
-            const progressPercent = (currentIndex / currentQuestions.length) * 100;
+            const progressPercent = ((currentIndex) / currentQuestions.length) * 100;
 
             let feedbackHtml = '';
             if (isAnswered) {
                 const feedbackClass = isCorrect ? 'correct' : 'wrong';
-                feedbackHtml = `<div class="feedback ${feedbackClass}">${isCorrect ? q.explanation : `❌ Not quite. ${q.hint || 'Review the criteria for patentability and try again.'}`}</div>`;
+                const icon = isCorrect ? '✅' : '❌';
+                const prefix = isCorrect ? 'Correct! ' : 'Not quite. ';
+                feedbackHtml = `
+                    <div class="feedback ${feedbackClass}">
+                        <span class="feedback-icon">${icon}</span>
+                        <div><strong>${prefix}</strong> ${q.explanation}</div>
+                    </div>
+                `;
             }
 
+            const patentBtnClass = getButtonClass(true, q.isPatentable, userChoice === true);
+            const notPatentBtnClass = getButtonClass(false, !q.isPatentable, userChoice === false);
+
             const html = `
+                <header class="game-header">
+                    <h1>BMA5001 - Innovation Management - Activity One</h1>
+                    <h2>📜 Patent or Not? – Test Your IP Knowledge</h2>
+                </header>
                 <div class="game-card">
-                    <div class="header">
-                        <h1>📜 Patent or Not?</h1>
-                        <div class="subtitle">Test your IP knowledge – click your answer, then learn why</div>
-                    </div>
-                    <div class="score-display">🏆 Score: ${score}</div>
+                    <div class="score-display">🏆 Score: ${score} / ${currentQuestions.length}</div>
                     <div class="progress">
                         <div class="progress-fill" style="width: ${progressPercent}%;"></div>
                     </div>
-                    <div class="question-counter">Innovation ${currentIndex + 1} of ${currentQuestions.length}</div>
-                    <div class="innovation-text">🔬 ${q.text}</div>
+                    <div class="question-counter">Scenario ${currentIndex + 1} of ${currentQuestions.length}</div>
+                    
+                    <div class="innovation-text">"${q.text}"</div>
+                    
                     <div class="buttons">
-                        <button class="patent-btn" onclick="checkAnswer(true)" ${isAnswered ? 'disabled' : ''}>✅ Patentable</button>
-                        <button class="not-patent-btn" onclick="checkAnswer(false)" ${isAnswered ? 'disabled' : ''}>❌ Not Patentable</button>
+                        <button class="action-btn ${patentBtnClass}" onclick="checkAnswer(true)" ${isAnswered ? 'disabled' : ''}>
+                            ✅ Patentable
+                        </button>
+                        <button class="action-btn ${notPatentBtnClass}" onclick="checkAnswer(false)" ${isAnswered ? 'disabled' : ''}>
+                            ❌ Not Patentable
+                        </button>
                     </div>
+                    
                     ${feedbackHtml}
-                    ${isAnswered ? `<button class="next-btn" onclick="nextQuestion()">➡️ Next Innovation</button>` : ''}
+                    ${isAnswered ? `<button class="next-btn" onclick="nextQuestion()">➡️ Next Scenario</button>` : ''}
                 </div>
             `;
             container.innerHTML = html;
@@ -406,9 +560,13 @@
             const { badge, badgeClass, message } = getBadgeAndMessage(scorePercentage);
 
             const html = `
+                <header class="game-header">
+                    <h1>BMA5001 - Innovation Management - Activity One</h1>
+                    <h2>📜 Patent or Not? – Test Your IP Knowledge</h2>
+                </header>
                 <div class="completion-card">
                     <div class="celebration">🎉🏆🎉</div>
-                    <h2>Game Complete!</h2>
+                    <h2>Activity Complete!</h2>
                     <div class="score-circle">${score}/${currentQuestions.length}</div>
                     <div class="badge ${badgeClass}">${badge}</div>
                     <div class="encouragement">💡 ${message}</div>
@@ -448,5 +606,13 @@
         initGame();
         render();
     </script>
+
+    <!-- STANDARD FOOTER -->
+    <footer class="bsu-footer">
+        <p><strong>🏛️ Bath Spa University — Hackney</strong></p>
+        <p>BMA5001 — Innovation Management</p>
+        <p>Module Leader: Mohammed Hbubati - 📧 <a href="mailto:m.hbubati@bathspa.ac.uk">m.hbubati@bathspa.ac.uk</a></p>
+        <p class="footer-tagline">🌱 Designed for Interactive & Sustainable Learning</p>
+    </footer>
 </body>
 </html>
